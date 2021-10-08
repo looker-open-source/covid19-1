@@ -1,0 +1,32 @@
+{
+  "label": "Covid-19",
+  "category_label": "Models",
+  "branding": {
+    "image_uri": "https://marketplace-api.looker.com/block-icons/covid_icon.png",
+    "tagline": "Explore Public COVID-19 Datasets."
+  },
+
+  "constants": {
+    "CONNECTION_NAME": {
+      "label": "Connection Name",
+      "value_constraint": "connection"
+    },
+    "CONFIG_PROJECT_NAME": {
+      "label": "Config Project Name"
+    }
+  },
+  "models": [
+    {
+      "name": "covid",
+      "connection_constant": "CONNECTION_NAME"
+    }
+  ],
+  "auxiliary_projects": [
+    {
+      "git_uri": "git://github.com/llooker/data-block-covid19-config.git",
+      "git_ref": "6e8c026c30eec325d8bebebf4234bbbafe9512b7",
+      "label": "Covid-19 Config",
+      "constant_name": "CONFIG_PROJECT_NAME"
+    }
+  ]
+}
