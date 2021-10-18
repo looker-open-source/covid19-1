@@ -1,8 +1,9 @@
+include: "/views/*.view"
+
 #### Italy ####
 
-explore: italy_core {
+explore: italy {
   from: italy_regions
-  extension: required
   description: "This explore is based off of data released from the Italian government which shows province and region level data for Italy"
   group_label: "COVID 19"
 

@@ -1,15 +1,6 @@
-include: "//@{CONFIG_PROJECT_NAME}/covid_block/covid_tracking_project.view.lkml"
-
 #This data was brought in to show testing data from the COVID19 Tracing project - https://covidtracking.com/
 
 view: covid_tracking_project {
-  extends: [covid_tracking_project_config]
-}
-
-###################################################
-
-
-view: covid_tracking_project_core {
   derived_table: {
     datagroup_trigger: covid_data
     sql:

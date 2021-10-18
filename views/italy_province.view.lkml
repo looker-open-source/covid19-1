@@ -1,15 +1,6 @@
-include: "//@{CONFIG_PROJECT_NAME}/covid_block/italy_province.view.lkml"
-
 #This view pulls in data about cases for italian provinces
 
 view: italy_province {
-  extends: [italy_province_config]
-}
-
-###################################################
-
-view: italy_province_core {
-  extension: required
   derived_table: {
     sql:
     -- First roll the province-level data up to the region level

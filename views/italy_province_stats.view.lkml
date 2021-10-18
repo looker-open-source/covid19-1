@@ -1,18 +1,7 @@
-include: "//@{CONFIG_PROJECT_NAME}/covid_block/italy_province_stats.view.lkml"
-
 #This view has population and area stats for Italian provinces
 
 
 view: italy_province_stats {
-  extends: [italy_province_stats_config]
-}
-
-###################################################
-
-
-
-view: italy_province_stats_core {
-  extension: required
   derived_table: {
     sql: SELECT * FROM `lookerdata.covid19_block.italy_province_stats` ;;
     sql_trigger_value: SELECT COUNT(*) FROM `lookerdata.covid19_block.italy_province_stats` ;;

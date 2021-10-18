@@ -1,14 +1,6 @@
-include: "//@{CONFIG_PROJECT_NAME}/covid_block/population_by_county_state_country.view.lkml"
 #this data was pulled in from bigquery public datasets and shows populations by geographic regions
 
 view: population_by_county_state_country {
-  extends: [population_by_county_state_country_config]
-}
-
-###################################################
-
-view: population_by_county_state_country_core {
-  extension: required
   derived_table: {
     datagroup_trigger: covid_data
     sql:

@@ -5,7 +5,7 @@
   elements:
   - title: Confirmed Cases
     name: Confirmed Cases
-    model: covid
+    model: covid_v2
     explore: covid_combined
     type: single_value
     fields: [covid_combined.confirmed_running_total, covid_combined.measurement_date]
@@ -66,7 +66,7 @@
     height: 5
   - title: Deaths
     name: Deaths
-    model: covid
+    model: covid_v2
     explore: covid_combined
     type: single_value
     fields: [covid_combined.measurement_date, covid_combined.deaths_running_total]
@@ -127,7 +127,7 @@
     height: 4
   - title: Daily Growth Rate
     name: Daily Growth Rate
-    model: covid
+    model: covid_v2
     explore: covid_combined
     type: single_value
     fields: [covid_combined.measurement_date, prior_days_cases_covid.seven_day_average_change_rate_confirmed_cases_running_total]
@@ -189,7 +189,7 @@
     height: 4
   - title: Cases / ICU Beds
     name: Cases / ICU Beds
-    model: covid
+    model: covid_v2
     explore: covid_combined
     type: single_value
     fields: [covid_combined.measurement_date, covid_combined.confirmed_cases_per_icu_beds]
@@ -251,7 +251,7 @@
     height: 4
   - title: Confirmed Cases
     name: Confirmed Cases (2)
-    model: covid
+    model: covid_v2
     explore: covid_combined
     type: looker_map
     fields: [covid_combined.fips, covid_combined.confirmed_running_total]
@@ -336,7 +336,7 @@
     height: 9
   - title: Daily Growth Rate
     name: Daily Growth Rate (2)
-    model: covid
+    model: covid_v2
     explore: covid_combined
     type: looker_map
     fields: [prior_days_cases_covid.seven_day_average_change_rate_confirmed_cases_running_total,
@@ -424,7 +424,7 @@
     height: 9
   - title: Current Summary
     name: Current Summary
-    model: covid
+    model: covid_v2
     explore: covid_combined
     type: looker_grid
     fields: [covid_combined.county, covid_combined.confirmed_cases_per_icu_beds, covid_combined.confirmed_cases_per_licensed_beds,
@@ -551,7 +551,7 @@
     height: 9
   - title: State Mandates
     name: State Mandates
-    model: covid
+    model: covid_v2
     explore: covid_combined
     type: looker_single_record
     fields: [covid_combined.province_state, policies_by_state.non_essential_business_closures,
@@ -608,7 +608,7 @@
     height: 5
   - title: Confirmed Cases by County
     name: Confirmed Cases by County
-    model: covid
+    model: covid_v2
     explore: covid_combined
     type: looker_column
     fields: [covid_combined.measurement_date, covid_combined.county_top_x, covid_combined.confirmed_running_total_no_drill]
@@ -743,7 +743,7 @@
     default_value: New York
     allow_multiple_values: true
     required: false
-    model: covid
+    model: covid_v2
     explore: covid_combined
     listens_to_filters: [Region]
     field: covid_combined.province_state
@@ -753,7 +753,7 @@
     default_value: ''
     allow_multiple_values: true
     required: false
-    model: covid
+    model: covid_v2
     explore: covid_combined
     listens_to_filters: [State]
     field: covid_combined.county

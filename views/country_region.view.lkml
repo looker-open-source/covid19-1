@@ -1,13 +1,6 @@
-include: "//@{CONFIG_PROJECT_NAME}/covid_block/country_region.view.lkml"
 #This view pulls data from a static table that maps a country to its global region
 
 view: country_region {
-  extends: [country_region_config]
-}
-
-###################################################
-
-view: country_region_core {
   sql_table_name: `lookerdata.covid19_block.country_region`;;
 
   dimension: country {
