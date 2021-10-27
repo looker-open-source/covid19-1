@@ -5,7 +5,7 @@
   elements:
   - title: Status of Current Confirmed Patients
     name: Status of Current Confirmed Patients
-    model: covid
+    model: covid_v2
     explore: italy
     type: looker_column
     fields: [italy.icu, italy.home_quarantine, italy.currently_hospitalized, italy.region]
@@ -69,7 +69,7 @@
     height: 9
   - title: Total Cases by Province (per thousand inhabitants)
     name: Total Cases by Province (per thousand inhabitants)
-    model: covid
+    model: covid_v2
     explore: italy
     type: looker_map
     fields: [italy_province.total_cases_pp, italy_province.province]
@@ -111,7 +111,7 @@
     height: 10
   - title: Deaths by Region (per thousand inhabitants)
     name: Deaths by Region (per thousand inhabitants)
-    model: covid
+    model: covid_v2
     explore: italy
     type: looker_map
     fields: [italy.total_deceased_pp, italy.deceased, italy.region]
@@ -153,7 +153,7 @@
     height: 10
   - title: Daily Growth Rate by Province
     name: Daily Growth Rate by Province
-    model: covid
+    model: covid_v2
     explore: italy
     type: looker_grid
     fields: [italy.reporting_date, italy_province.total_cases, italy.new_cases, italy_province.province]
@@ -285,7 +285,7 @@
     height: 46
   - title: Daily Tests per 1,000 Inhabitants
     name: Daily Tests per 1,000 Inhabitants
-    model: covid
+    model: covid_v2
     explore: italy
     type: looker_column
     fields: [italy.reporting_date, italy.new_tests, italy.population, italy.region]

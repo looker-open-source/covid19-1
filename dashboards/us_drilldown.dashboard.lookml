@@ -5,7 +5,7 @@
   elements:
   - title: Confirmed Cases
     name: Confirmed Cases
-    model: covid
+    model: covid_v2
     explore: covid_combined
     type: single_value
     fields: [covid_combined.confirmed_running_total, covid_combined.measurement_date]
@@ -66,7 +66,7 @@
     height: 4
   - title: Deaths
     name: Deaths
-    model: covid
+    model: covid_v2
     explore: covid_combined
     type: single_value
     fields: [covid_combined.measurement_date, covid_combined.deaths_running_total]
@@ -127,7 +127,7 @@
     height: 4
   - title: Daily Growth Rate
     name: Daily Growth Rate
-    model: covid
+    model: covid_v2
     explore: covid_combined
     type: single_value
     fields: [covid_combined.measurement_date, prior_days_cases_covid.seven_day_average_change_rate_confirmed_cases_running_total]
@@ -189,7 +189,7 @@
     height: 4
   - title: Latest Data
     name: Latest Data
-    model: covid
+    model: covid_v2
     explore: covid_combined
     type: single_value
     fields: [covid_combined.measurement_date]
@@ -251,7 +251,7 @@
     height: 4
   - title: Confirmed Cases
     name: Confirmed Cases (2)
-    model: covid
+    model: covid_v2
     explore: covid_combined
     type: looker_geo_choropleth
     fields: [covid_combined.province_state, covid_combined.confirmed_running_total]
@@ -336,7 +336,7 @@
     height: 8
   - title: Daily Growth Rate
     name: Daily Growth Rate (2)
-    model: covid
+    model: covid_v2
     explore: covid_combined
     type: looker_geo_choropleth
     fields: [covid_combined.province_state, prior_days_cases_covid.seven_day_average_change_rate_confirmed_cases_running_total]
@@ -423,7 +423,7 @@
     height: 8
   - title: Confirmed Cases (Last 3 Weeks)
     name: Confirmed Cases (Last 3 Weeks)
-    model: covid
+    model: covid_v2
     explore: covid_combined
     type: looker_column
     fields: [covid_combined.measurement_date, covid_combined.state_top_x, covid_combined.confirmed_running_total_no_drill]
@@ -538,7 +538,7 @@
     height: 9
   - title: Current Summary by State
     name: Current Summary by State
-    model: covid
+    model: covid_v2
     explore: covid_combined
     type: looker_grid
     fields: [covid_combined.province_state, covid_combined.confirmed_cases_per_icu_beds,
@@ -682,7 +682,7 @@
     default_value: ''
     allow_multiple_values: true
     required: false
-    model: covid
+    model: covid_v2
     explore: covid_combined
     listens_to_filters: []
     field: state_region.region
@@ -692,7 +692,7 @@
     default_value: ''
     allow_multiple_values: true
     required: false
-    model: covid
+    model: covid_v2
     explore: covid_combined
     listens_to_filters: [Region]
     field: covid_combined.province_state

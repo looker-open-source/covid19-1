@@ -1,17 +1,8 @@
-include: "//@{CONFIG_PROJECT_NAME}/covid_block/hospital_bed_summary.view.lkml"
-
 #This view calculates thing like how many beds are available in different geograhies and estimates how many beds are being utilized
 
 #source: defitinitve healthcare, https://opendata.arcgis.com/datasets/1044bb19da8d4dbfb6a96eb1b4ebf629_0.csv
 
 view: hospital_bed_summary {
-  extends: [hospital_bed_summary_config]
-}
-
-###################################################
-
-view: hospital_bed_summary_core {
-  extension: required
   derived_table: {
     datagroup_trigger: covid_data
     #combining NYC fips codes to match other data

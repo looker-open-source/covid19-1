@@ -5,7 +5,7 @@
   elements:
   - title: Confirmed Cases
     name: Confirmed Cases
-    model: covid
+    model: covid_v2
     explore: covid_combined
     type: single_value
     fields: [covid_combined.confirmed_running_total, covid_combined.measurement_date]
@@ -64,7 +64,7 @@
     height: 5
   - title: Deaths
     name: Deaths
-    model: covid
+    model: covid_v2
     explore: covid_combined
     type: single_value
     fields: [covid_combined.measurement_date, covid_combined.deaths_running_total]
@@ -123,7 +123,7 @@
     height: 5
   - title: New Cases
     name: New Cases
-    model: covid
+    model: covid_v2
     explore: covid_combined
     type: single_value
     fields: [covid_combined.measurement_date, covid_combined.confirmed_new]
@@ -182,7 +182,7 @@
     height: 5
   - title: Daily Growth Rate
     name: Daily Growth Rate
-    model: covid
+    model: covid_v2
     explore: covid_combined
     type: single_value
     fields: [covid_combined.measurement_date, prior_days_cases_covid.seven_day_average_change_rate_confirmed_cases_running_total]
@@ -242,7 +242,7 @@
     height: 5
   - title: Confirmed Cases
     name: Confirmed Cases (2)
-    model: covid
+    model: covid_v2
     explore: covid_combined
     type: looker_geo_choropleth
     fields: [covid_combined.country_region, covid_combined.confirmed_running_total]
@@ -325,7 +325,7 @@
     height: 6
   - title: New Cases
     name: New Cases (2)
-    model: covid
+    model: covid_v2
     explore: covid_combined
     type: looker_geo_choropleth
     fields: [covid_combined.country_region, covid_combined.confirmed_new]
@@ -410,7 +410,7 @@
     height: 6
   - title: Daily Growth Rate
     name: Daily Growth Rate (2)
-    model: covid
+    model: covid_v2
     explore: covid_combined
     type: looker_geo_choropleth
     fields: [covid_combined.country_region, prior_days_cases_covid.seven_day_average_change_rate_confirmed_cases_running_total]
@@ -492,7 +492,7 @@
     height: 6
   - title: Confirmed Cases by Country
     name: Confirmed Cases by Country
-    model: covid
+    model: covid_v2
     explore: covid_combined
     type: looker_column
     fields: [covid_combined.measurement_date, covid_combined.confirmed_running_total,
@@ -604,7 +604,7 @@
     height: 8
   - title: Share of Cases by Country
     name: Share of Cases by Country
-    model: covid
+    model: covid_v2
     explore: covid_combined
     type: looker_column
     fields: [covid_combined.measurement_date, covid_combined.confirmed_running_total,
@@ -716,7 +716,7 @@
     height: 8
   - title: Summary by Country
     name: Summary by Country
-    model: covid
+    model: covid_v2
     explore: covid_combined
     type: looker_grid
     fields: [covid_combined.country_region, covid_combined.confirmed_running_total,
@@ -851,7 +851,7 @@
     default_value: ''
     allow_multiple_values: true
     required: false
-    model: covid
+    model: covid_v2
     explore: covid_combined
     listens_to_filters: []
     field: country_region.region
@@ -861,7 +861,7 @@
     default_value: ''
     allow_multiple_values: true
     required: false
-    model: covid
+    model: covid_v2
     explore: covid_combined
     listens_to_filters: [Region]
     field: covid_combined.country_region

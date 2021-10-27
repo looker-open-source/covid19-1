@@ -28,27 +28,27 @@ Below you can find all the tables needed for the Block, with their names in the 
 3. Italy Province Data
  - Table name in LookML: `bigquery-public-data.covid19_italy.data_by_province`
  - CSV file: `s3://starschema.covid/PCM_DPS_COVID19.csv`
- - Update Frequency: Daily	
+ - Update Frequency: Daily
 
 4. Italy Region Data
  - Table name in LookML:`bigquery-public-data.covid19_italy.data_by_region`
  - CSV file: `s3://starschema.covid/PCM_DPS_COVID19-DETAILS.csv`
- - Update Frequency: Daily	
+ - Update Frequency: Daily
 
 5. Kaiser Family Foundation, US State Policies
- - Table name in LookML: `lookerdata.covid19_block.state_policies` 
+ - Table name in LookML: `lookerdata.covid19_block.state_policies`
  - CSV file: `s3://starschema.covid/KFF_US_POLICY_ACTIONS.csv`
- - Update Frequency: Intermittent	
+ - Update Frequency: Intermittent
 
 6. Kaiser Family Foundation, US State Mitigations
  - Table name in LookML: `lookerdata.covid19_block.state_mitigations
  - CSV file: `s3://starschema.covid/KFF_US_STATE_MITIGATIONS.csv`
- - Update Frequency: Intermittent	
+ - Update Frequency: Intermittent
 
 7. COVID-19 Tracking Project
  - Table name in LookML: `lookerdata.covid19_block.covid19_tracking_project`
  - CSV file: `s3://starschema.covid/CT_US_COVID_TESTS.csv`
- - Update Frequency: Daily	
+ - Update Frequency: Daily
 
 ***Static Data***
 The following static CSV files can be loaded once from S3 and do not need to be reloaded.
@@ -79,7 +79,7 @@ CSV File: `https://looker-datablocks.s3.amazonaws.com/covid-19/hospital_bed_summ
 
 ***Creating a Snowflake COVID19 DB Share***
  - Specific [instructions](https://docs.google.com/document/d/1RnqyyWbnistx5DwENjOn6KrJgLSIRaXIJi4-dGuqdTE/edit) from Snowflake to create the DB Share
- - The DB Share is a Read Only once created 
+ - The DB Share is a Read Only once created
  - Also, you can name the database - thus, each client can have a different database name for this share
 
 **Part 2: Installing the Block through the Marketplace**
@@ -92,60 +92,56 @@ Once you have necessary datasets available in your database, and you have instal
 
 ***NYT Data***
  - Snowflake Table Name: [DATABASE_NAME].”PUBLIC”.”NYT_COVID19”
- - Column Name Changes(BigQuery->Snowflake): 
+ - Column Name Changes(BigQuery->Snowflake):
   - state_name -> state
   - confirmed_cases -> cases
 
-BigQuery Syntax: This can be found in the read only project for the Covid19 block Marketplace_covid_19 -> covid_block -> nyt_data.view
-
+BigQuery Syntax: This will be placed in a refinement file on the installed marketplace project.
 ``` sql
-derived_table: {
-sql:
-select * except(county, county_fips_code),
-           case when county = 'Unknown' then concat(county,' - ',state_name) else county end as county,
+include: "//block-covid19/views/*.view.lkml"
+
+view: +nyt_data {
+  derived_table: {
+    sql: select * except(county, county_fips_code),
+           case when county = 'Unknown' then concat(county,' - ',state_name)
+              else county end as county,
             case when county = 'Unknown'then NULL
                 --mofifying the FIPS code to match other data
                 when county = 'New York City' then 36125
                 when county = 'Kansas City' then 29095
                 else cast(county_fips_code as int64) end as fips
         from `bigquery-public-data.covid19_nyt.us_counties`;;
-    sql_trigger_value: SELECT COUNT(*) FROM `bigquery-public-data.covid19_nyt.us_counties`
-;;}
-``` 
+    sql_trigger_value: SELECT COUNT(*) FROM `bigquery-public-data.covid19_nyt.us_counties` ;;
+  }
+```
 
-Snowflake Syntax: Edit the view in the config project of the installed block. Remember the extends rules.
+Snowflake Syntax: This will be placed in a refinement file on the installed marketplace project.
 
 ``` sql
-view: nyt_data_config {
-  extends: [nyt_data_core]
-  extension: required
-  # Add view customizations here
+include: "//block-covid19/views/*.view.lkml"
 
-derived_table: {
-sql:
-SELECT
-date, 
-case when county = 'Unknown' then concat(county,' - ',state_name) else county end as county, 
-state as state_name, 
-    --mofifying the FIPS code to match other data
-	case when county = 'Unknown' then NULL
+view: +nyt_data {
+  derived_table: {
+    sql: SELECT date,
+          case when county = 'Unknown' then concat(county,' - ',state_name)
+            else county end as county,
+          state as state_name,
+        --mofifying the FIPS code to match other data
+          case when county = 'Unknown' then NULL
             when county = 'New York City' then 36125
             when county = 'Kansas City' then 29095
-            else fips 
-        end as fips, 
-cases as confirmed_cases,
-deaths as deaths
-FROM “[DATABASE_NAME]”.”PUBLIC”.”NYT_US_COVID19” ;;
-}
-Sql_trigger_value: SELECT COUNT(*) FROM “[DATABASE_NAME]”.”PUBLIC”.”NYT_US_COVID19”
+            else fips
+          end as fips,
+          cases as confirmed_cases,
+          deaths as deaths
+        FROM “[DATABASE_NAME]”.”PUBLIC”.”NYT_US_COVID19” ;;
+  }
+  sql_trigger_value: SELECT COUNT(*) FROM “[DATABASE_NAME]”.”PUBLIC”.”NYT_US_COVID19” ;;
 ```
 
 ***John Hopkins Data (JHU)***
  - Snowflake Table Name: “[DATABASE_NAME]”."PUBLIC"."JHU_COVID_19"
  - IMPORTANT - Granularity Changes
-  - The BigQuery table is mostly unique record per day, per longitude, latitude (info on Cruise ships and null long/lats make it messy). The Snowflake table is a unique record per long, lat, date AND case_type. Case Type can be Confirmed, Deaths, Active, Recovered. 
+  - The BigQuery table is mostly unique record per day, per longitude, latitude (info on Cruise ships and null long/lats make it messy). The Snowflake table is a unique record per long, lat, date AND case_type. Case Type can be Confirmed, Deaths, Active, Recovered.
 A subquery needs to be used to make the SF table the same granularity as the BQ table. This has to be done, because we are using lag functions and if they are not in the same grain, the value will be incorrect.
 Column Name Changes (BQ -> SF)
-
-
-

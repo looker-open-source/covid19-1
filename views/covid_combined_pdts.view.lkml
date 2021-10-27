@@ -1,70 +1,11 @@
-include: "//@{CONFIG_PROJECT_NAME}/covid_block/covid_combined_pdts.view.lkml"
-
 ### This view file has several different PDTs that calculate metrics like ranks and comparisons of geographies
 
 
 ####################
 ### Max Dates
 ####################
+
 view: max_date_covid {
-  extends: [max_date_covid_config]
-}
-
-view: max_date_tracking_project {
-  extends: [max_date_tracking_project_config]
-}
-
-
-####################
-### Ranks
-####################
-view: country_rank {
-  extends: [country_rank_config]
-}
-
-view: state_rank {
-  extends: [state_rank_config]
-}
-
-view: fips_rank {
-  extends: [fips_rank_config]
-}
-
-
-####################
-### Growth Rate / Days to Double
-####################
-view: prior_days_cases_covid {
-  extends: [prior_days_cases_covid_config]
-}
-
-####################
-### Compare Geographies
-####################
-view: kpis_by_county_by_date {
-  extends: [kpis_by_county_by_date_config]
-}
-
-view: kpis_by_state_by_date {
-  extends: [kpis_by_state_by_date_config]
-}
-
-view: kpis_by_country_by_date {
-  extends: [kpis_by_country_by_date_config]
-}
-
-view: kpis_by_entity_by_date {
-  extends: [kpis_by_entity_by_date_config]
-}
-
-##########################################
-
-
-####################
-### Max Dates
-####################
-
-view: max_date_covid_core {
   derived_table: {
     datagroup_trigger: covid_data
     explore_source: covid_combined {
@@ -82,7 +23,7 @@ view: max_date_covid_core {
   }
 }
 
-view: max_date_tracking_project_core {
+view: max_date_tracking_project {
   derived_table: {
     datagroup_trigger: covid_data
     explore_source: covid_combined {
@@ -104,7 +45,7 @@ view: max_date_tracking_project_core {
 ### Ranks
 ####################
 
-view: country_rank_core {
+view: country_rank {
   derived_table: {
     explore_source: covid_combined {
       bind_all_filters: yes
@@ -119,7 +60,7 @@ view: country_rank_core {
   dimension: rank { hidden: yes type: number }
 }
 
-view: state_rank_core {
+view: state_rank {
   derived_table: {
     explore_source: covid_combined {
       bind_all_filters: yes
@@ -138,7 +79,7 @@ view: state_rank_core {
   dimension: rank { hidden: yes type: number }
 }
 
-view: fips_rank_core {
+view: fips_rank {
   derived_table: {
     explore_source: covid_combined {
       bind_all_filters: yes
@@ -161,85 +102,85 @@ view: fips_rank_core {
 ### Growth Rate / Days to Double
 ####################
 
-view: prior_days_cases_covid_core {
+view: prior_days_cases_covid {
   view_label: "Trends"
   derived_table: {
     sql_trigger_value: SELECT max(cast(measurement_date as date)) as max_date FROM ${covid_combined.SQL_TABLE_NAME} ;;
     explore_source: covid_combined {
-      column: measurement_date {}
-      column: pre_pk {}
-      column: confirmed_running_total {}
-      column: deaths_running_total {}
-      column: confirmed_new {}
-      column: deaths_new {}
-      column: confirmed_running_total_per_million {}
-      column: deaths_running_total_per_million {}
-      column: confirmed_new_per_million {}
-      column: deaths_new_per_million {}
+      column: measurement_date {field: covid_combined.measurement_date}
+      column: pre_pk {field: covid_combined.pre_pk}
+      column: confirmed_running_total {field: covid_combined.confirmed_running_total}
+      column: deaths_running_total {field: covid_combined.deaths_running_total}
+      column: confirmed_new {field: covid_combined.confirmed_new}
+      column: deaths_new {field: covid_combined.deaths_new}
+      column: confirmed_running_total_per_million {field: covid_combined.confirmed_running_total_per_million}
+      column: deaths_running_total_per_million {field: covid_combined.deaths_running_total_per_million}
+      column: confirmed_new_per_million {field: covid_combined.confirmed_new_per_million}
+      column: deaths_new_per_million {field: covid_combined.deaths_new_per_million}
 
-      derived_column: prior_1_days_confirmed_running_total {sql: coalesce (max (${confirmed_running_total}) OVER (PARTITION BY ${pre_pk} ORDER BY ${measurement_date} asc ROWS BETWEEN 2 PRECEDING and 1 PRECEDING),0) ;;}
-      derived_column: prior_2_days_confirmed_running_total {sql: coalesce (max (${confirmed_running_total}) OVER (PARTITION BY ${pre_pk} ORDER BY ${measurement_date} asc ROWS BETWEEN 3 PRECEDING and 2 PRECEDING),0) ;;}
-      derived_column: prior_3_days_confirmed_running_total {sql: coalesce (max (${confirmed_running_total}) OVER (PARTITION BY ${pre_pk} ORDER BY ${measurement_date} asc ROWS BETWEEN 4 PRECEDING and 3 PRECEDING),0) ;;}
-      derived_column: prior_4_days_confirmed_running_total {sql: coalesce (max (${confirmed_running_total}) OVER (PARTITION BY ${pre_pk} ORDER BY ${measurement_date} asc ROWS BETWEEN 5 PRECEDING and 4 PRECEDING),0) ;;}
-      derived_column: prior_5_days_confirmed_running_total {sql: coalesce (max (${confirmed_running_total}) OVER (PARTITION BY ${pre_pk} ORDER BY ${measurement_date} asc ROWS BETWEEN 6 PRECEDING and 5 PRECEDING),0) ;;}
-      derived_column: prior_6_days_confirmed_running_total {sql: coalesce (max (${confirmed_running_total}) OVER (PARTITION BY ${pre_pk} ORDER BY ${measurement_date} asc ROWS BETWEEN 7 PRECEDING and 6 PRECEDING),0) ;;}
-      derived_column: prior_7_days_confirmed_running_total {sql: coalesce (max (${confirmed_running_total}) OVER (PARTITION BY ${pre_pk} ORDER BY ${measurement_date} asc ROWS BETWEEN 8 PRECEDING and 7 PRECEDING),0) ;;}
+      derived_column: prior_1_days_confirmed_running_total {sql: coalesce (max (confirmed_running_total) OVER (PARTITION BY pre_pk ORDER BY measurement_date asc ROWS BETWEEN 2 PRECEDING and 1 PRECEDING),0) ;;}
+      derived_column: prior_2_days_confirmed_running_total {sql: coalesce (max (confirmed_running_total) OVER (PARTITION BY pre_pk ORDER BY measurement_date asc ROWS BETWEEN 3 PRECEDING and 2 PRECEDING),0) ;;}
+      derived_column: prior_3_days_confirmed_running_total {sql: coalesce (max (confirmed_running_total) OVER (PARTITION BY pre_pk ORDER BY measurement_date asc ROWS BETWEEN 4 PRECEDING and 3 PRECEDING),0) ;;}
+      derived_column: prior_4_days_confirmed_running_total {sql: coalesce (max (confirmed_running_total) OVER (PARTITION BY pre_pk ORDER BY measurement_date asc ROWS BETWEEN 5 PRECEDING and 4 PRECEDING),0) ;;}
+      derived_column: prior_5_days_confirmed_running_total {sql: coalesce (max (confirmed_running_total) OVER (PARTITION BY pre_pk ORDER BY measurement_date asc ROWS BETWEEN 6 PRECEDING and 5 PRECEDING),0) ;;}
+      derived_column: prior_6_days_confirmed_running_total {sql: coalesce (max (confirmed_running_total) OVER (PARTITION BY pre_pk ORDER BY measurement_date asc ROWS BETWEEN 7 PRECEDING and 6 PRECEDING),0) ;;}
+      derived_column: prior_7_days_confirmed_running_total {sql: coalesce (max (confirmed_running_total) OVER (PARTITION BY pre_pk ORDER BY measurement_date asc ROWS BETWEEN 8 PRECEDING and 7 PRECEDING),0) ;;}
 
-      derived_column: prior_1_days_deaths_running_total {sql: coalesce (max (${deaths_running_total}) OVER (PARTITION BY ${pre_pk} ORDER BY ${measurement_date} asc ROWS BETWEEN 2 PRECEDING and 1 PRECEDING),0) ;;}
-      derived_column: prior_2_days_deaths_running_total {sql: coalesce (max (${deaths_running_total}) OVER (PARTITION BY ${pre_pk} ORDER BY ${measurement_date} asc ROWS BETWEEN 3 PRECEDING and 2 PRECEDING),0) ;;}
-      derived_column: prior_3_days_deaths_running_total {sql: coalesce (max (${deaths_running_total}) OVER (PARTITION BY ${pre_pk} ORDER BY ${measurement_date} asc ROWS BETWEEN 4 PRECEDING and 3 PRECEDING),0) ;;}
-      derived_column: prior_4_days_deaths_running_total {sql: coalesce (max (${deaths_running_total}) OVER (PARTITION BY ${pre_pk} ORDER BY ${measurement_date} asc ROWS BETWEEN 5 PRECEDING and 4 PRECEDING),0) ;;}
-      derived_column: prior_5_days_deaths_running_total {sql: coalesce (max (${deaths_running_total}) OVER (PARTITION BY ${pre_pk} ORDER BY ${measurement_date} asc ROWS BETWEEN 6 PRECEDING and 5 PRECEDING),0) ;;}
-      derived_column: prior_6_days_deaths_running_total {sql: coalesce (max (${deaths_running_total}) OVER (PARTITION BY ${pre_pk} ORDER BY ${measurement_date} asc ROWS BETWEEN 7 PRECEDING and 6 PRECEDING),0) ;;}
-      derived_column: prior_7_days_deaths_running_total {sql: coalesce (max (${deaths_running_total}) OVER (PARTITION BY ${pre_pk} ORDER BY ${measurement_date} asc ROWS BETWEEN 8 PRECEDING and 7 PRECEDING),0) ;;}
+      derived_column: prior_1_days_deaths_running_total {sql: coalesce (max (deaths_running_total) OVER (PARTITION BY pre_pk ORDER BY measurement_date asc ROWS BETWEEN 2 PRECEDING and 1 PRECEDING),0) ;;}
+      derived_column: prior_2_days_deaths_running_total {sql: coalesce (max (deaths_running_total) OVER (PARTITION BY pre_pk ORDER BY measurement_date asc ROWS BETWEEN 3 PRECEDING and 2 PRECEDING),0) ;;}
+      derived_column: prior_3_days_deaths_running_total {sql: coalesce (max (deaths_running_total) OVER (PARTITION BY pre_pk ORDER BY measurement_date asc ROWS BETWEEN 4 PRECEDING and 3 PRECEDING),0) ;;}
+      derived_column: prior_4_days_deaths_running_total {sql: coalesce (max (deaths_running_total) OVER (PARTITION BY pre_pk ORDER BY measurement_date asc ROWS BETWEEN 5 PRECEDING and 4 PRECEDING),0) ;;}
+      derived_column: prior_5_days_deaths_running_total {sql: coalesce (max (deaths_running_total) OVER (PARTITION BY pre_pk ORDER BY measurement_date asc ROWS BETWEEN 6 PRECEDING and 5 PRECEDING),0) ;;}
+      derived_column: prior_6_days_deaths_running_total {sql: coalesce (max (deaths_running_total) OVER (PARTITION BY pre_pk ORDER BY measurement_date asc ROWS BETWEEN 7 PRECEDING and 6 PRECEDING),0) ;;}
+      derived_column: prior_7_days_deaths_running_total {sql: coalesce (max (deaths_running_total) OVER (PARTITION BY pre_pk ORDER BY measurement_date asc ROWS BETWEEN 8 PRECEDING and 7 PRECEDING),0) ;;}
 
-      derived_column: prior_1_days_confirmed_new {sql: coalesce (max (${confirmed_new}) OVER (PARTITION BY ${pre_pk} ORDER BY ${measurement_date} asc ROWS BETWEEN 2 PRECEDING and 1 PRECEDING),0) ;;}
-      derived_column: prior_2_days_confirmed_new {sql: coalesce (max (${confirmed_new}) OVER (PARTITION BY ${pre_pk} ORDER BY ${measurement_date} asc ROWS BETWEEN 3 PRECEDING and 2 PRECEDING),0) ;;}
-      derived_column: prior_3_days_confirmed_new {sql: coalesce (max (${confirmed_new}) OVER (PARTITION BY ${pre_pk} ORDER BY ${measurement_date} asc ROWS BETWEEN 4 PRECEDING and 3 PRECEDING),0) ;;}
-      derived_column: prior_4_days_confirmed_new {sql: coalesce (max (${confirmed_new}) OVER (PARTITION BY ${pre_pk} ORDER BY ${measurement_date} asc ROWS BETWEEN 5 PRECEDING and 4 PRECEDING),0) ;;}
-      derived_column: prior_5_days_confirmed_new {sql: coalesce (max (${confirmed_new}) OVER (PARTITION BY ${pre_pk} ORDER BY ${measurement_date} asc ROWS BETWEEN 6 PRECEDING and 5 PRECEDING),0) ;;}
-      derived_column: prior_6_days_confirmed_new {sql: coalesce (max (${confirmed_new}) OVER (PARTITION BY ${pre_pk} ORDER BY ${measurement_date} asc ROWS BETWEEN 7 PRECEDING and 6 PRECEDING),0) ;;}
-      derived_column: prior_7_days_confirmed_new {sql: coalesce (max (${confirmed_new}) OVER (PARTITION BY ${pre_pk} ORDER BY ${measurement_date} asc ROWS BETWEEN 8 PRECEDING and 7 PRECEDING),0) ;;}
+      derived_column: prior_1_days_confirmed_new {sql: coalesce (max (confirmed_new) OVER (PARTITION BY pre_pk ORDER BY measurement_date asc ROWS BETWEEN 2 PRECEDING and 1 PRECEDING),0) ;;}
+      derived_column: prior_2_days_confirmed_new {sql: coalesce (max (confirmed_new) OVER (PARTITION BY pre_pk ORDER BY measurement_date asc ROWS BETWEEN 3 PRECEDING and 2 PRECEDING),0) ;;}
+      derived_column: prior_3_days_confirmed_new {sql: coalesce (max (confirmed_new) OVER (PARTITION BY pre_pk ORDER BY measurement_date asc ROWS BETWEEN 4 PRECEDING and 3 PRECEDING),0) ;;}
+      derived_column: prior_4_days_confirmed_new {sql: coalesce (max (confirmed_new) OVER (PARTITION BY pre_pk ORDER BY measurement_date asc ROWS BETWEEN 5 PRECEDING and 4 PRECEDING),0) ;;}
+      derived_column: prior_5_days_confirmed_new {sql: coalesce (max (confirmed_new) OVER (PARTITION BY pre_pk ORDER BY measurement_date asc ROWS BETWEEN 6 PRECEDING and 5 PRECEDING),0) ;;}
+      derived_column: prior_6_days_confirmed_new {sql: coalesce (max (confirmed_new) OVER (PARTITION BY pre_pk ORDER BY measurement_date asc ROWS BETWEEN 7 PRECEDING and 6 PRECEDING),0) ;;}
+      derived_column: prior_7_days_confirmed_new {sql: coalesce (max (confirmed_new) OVER (PARTITION BY pre_pk ORDER BY measurement_date asc ROWS BETWEEN 8 PRECEDING and 7 PRECEDING),0) ;;}
 
-      derived_column: prior_1_days_deaths_new {sql: coalesce (max (${deaths_new}) OVER (PARTITION BY ${pre_pk} ORDER BY ${measurement_date} asc ROWS BETWEEN 2 PRECEDING and 1 PRECEDING),0) ;;}
-      derived_column: prior_2_days_deaths_new {sql: coalesce (max (${deaths_new}) OVER (PARTITION BY ${pre_pk} ORDER BY ${measurement_date} asc ROWS BETWEEN 3 PRECEDING and 2 PRECEDING),0) ;;}
-      derived_column: prior_3_days_deaths_new {sql: coalesce (max (${deaths_new}) OVER (PARTITION BY ${pre_pk} ORDER BY ${measurement_date} asc ROWS BETWEEN 4 PRECEDING and 3 PRECEDING),0) ;;}
-      derived_column: prior_4_days_deaths_new {sql: coalesce (max (${deaths_new}) OVER (PARTITION BY ${pre_pk} ORDER BY ${measurement_date} asc ROWS BETWEEN 5 PRECEDING and 4 PRECEDING),0) ;;}
-      derived_column: prior_5_days_deaths_new {sql: coalesce (max (${deaths_new}) OVER (PARTITION BY ${pre_pk} ORDER BY ${measurement_date} asc ROWS BETWEEN 6 PRECEDING and 5 PRECEDING),0) ;;}
-      derived_column: prior_6_days_deaths_new {sql: coalesce (max (${deaths_new}) OVER (PARTITION BY ${pre_pk} ORDER BY ${measurement_date} asc ROWS BETWEEN 7 PRECEDING and 6 PRECEDING),0) ;;}
-      derived_column: prior_7_days_deaths_new {sql: coalesce (max (${deaths_new}) OVER (PARTITION BY ${pre_pk} ORDER BY ${measurement_date} asc ROWS BETWEEN 8 PRECEDING and 7 PRECEDING),0) ;;}
+      derived_column: prior_1_days_deaths_new {sql: coalesce (max (deaths_new) OVER (PARTITION BY pre_pk ORDER BY measurement_date asc ROWS BETWEEN 2 PRECEDING and 1 PRECEDING),0) ;;}
+      derived_column: prior_2_days_deaths_new {sql: coalesce (max (deaths_new) OVER (PARTITION BY pre_pk ORDER BY measurement_date asc ROWS BETWEEN 3 PRECEDING and 2 PRECEDING),0) ;;}
+      derived_column: prior_3_days_deaths_new {sql: coalesce (max (deaths_new) OVER (PARTITION BY pre_pk ORDER BY measurement_date asc ROWS BETWEEN 4 PRECEDING and 3 PRECEDING),0) ;;}
+      derived_column: prior_4_days_deaths_new {sql: coalesce (max (deaths_new) OVER (PARTITION BY pre_pk ORDER BY measurement_date asc ROWS BETWEEN 5 PRECEDING and 4 PRECEDING),0) ;;}
+      derived_column: prior_5_days_deaths_new {sql: coalesce (max (deaths_new) OVER (PARTITION BY pre_pk ORDER BY measurement_date asc ROWS BETWEEN 6 PRECEDING and 5 PRECEDING),0) ;;}
+      derived_column: prior_6_days_deaths_new {sql: coalesce (max (deaths_new) OVER (PARTITION BY pre_pk ORDER BY measurement_date asc ROWS BETWEEN 7 PRECEDING and 6 PRECEDING),0) ;;}
+      derived_column: prior_7_days_deaths_new {sql: coalesce (max (deaths_new) OVER (PARTITION BY pre_pk ORDER BY measurement_date asc ROWS BETWEEN 8 PRECEDING and 7 PRECEDING),0) ;;}
 
-      derived_column: prior_1_days_confirmed_running_total_per_million {sql: coalesce (max (${confirmed_running_total_per_million}) OVER (PARTITION BY ${pre_pk} ORDER BY ${measurement_date} asc ROWS BETWEEN 2 PRECEDING and 1 PRECEDING),0) ;;}
-      derived_column: prior_2_days_confirmed_running_total_per_million {sql: coalesce (max (${confirmed_running_total_per_million}) OVER (PARTITION BY ${pre_pk} ORDER BY ${measurement_date} asc ROWS BETWEEN 3 PRECEDING and 2 PRECEDING),0) ;;}
-      derived_column: prior_3_days_confirmed_running_total_per_million {sql: coalesce (max (${confirmed_running_total_per_million}) OVER (PARTITION BY ${pre_pk} ORDER BY ${measurement_date} asc ROWS BETWEEN 4 PRECEDING and 3 PRECEDING),0) ;;}
-      derived_column: prior_4_days_confirmed_running_total_per_million {sql: coalesce (max (${confirmed_running_total_per_million}) OVER (PARTITION BY ${pre_pk} ORDER BY ${measurement_date} asc ROWS BETWEEN 5 PRECEDING and 4 PRECEDING),0) ;;}
-      derived_column: prior_5_days_confirmed_running_total_per_million {sql: coalesce (max (${confirmed_running_total_per_million}) OVER (PARTITION BY ${pre_pk} ORDER BY ${measurement_date} asc ROWS BETWEEN 6 PRECEDING and 5 PRECEDING),0) ;;}
-      derived_column: prior_6_days_confirmed_running_total_per_million {sql: coalesce (max (${confirmed_running_total_per_million}) OVER (PARTITION BY ${pre_pk} ORDER BY ${measurement_date} asc ROWS BETWEEN 7 PRECEDING and 6 PRECEDING),0) ;;}
-      derived_column: prior_7_days_confirmed_running_total_per_million {sql: coalesce (max (${confirmed_running_total_per_million}) OVER (PARTITION BY ${pre_pk} ORDER BY ${measurement_date} asc ROWS BETWEEN 8 PRECEDING and 7 PRECEDING),0) ;;}
+      derived_column: prior_1_days_confirmed_running_total_per_million {sql: coalesce (max (confirmed_running_total_per_million) OVER (PARTITION BY pre_pk ORDER BY measurement_date asc ROWS BETWEEN 2 PRECEDING and 1 PRECEDING),0) ;;}
+      derived_column: prior_2_days_confirmed_running_total_per_million {sql: coalesce (max (confirmed_running_total_per_million) OVER (PARTITION BY pre_pk ORDER BY measurement_date asc ROWS BETWEEN 3 PRECEDING and 2 PRECEDING),0) ;;}
+      derived_column: prior_3_days_confirmed_running_total_per_million {sql: coalesce (max (confirmed_running_total_per_million) OVER (PARTITION BY pre_pk ORDER BY measurement_date asc ROWS BETWEEN 4 PRECEDING and 3 PRECEDING),0) ;;}
+      derived_column: prior_4_days_confirmed_running_total_per_million {sql: coalesce (max (confirmed_running_total_per_million) OVER (PARTITION BY pre_pk ORDER BY measurement_date asc ROWS BETWEEN 5 PRECEDING and 4 PRECEDING),0) ;;}
+      derived_column: prior_5_days_confirmed_running_total_per_million {sql: coalesce (max (confirmed_running_total_per_million) OVER (PARTITION BY pre_pk ORDER BY measurement_date asc ROWS BETWEEN 6 PRECEDING and 5 PRECEDING),0) ;;}
+      derived_column: prior_6_days_confirmed_running_total_per_million {sql: coalesce (max (confirmed_running_total_per_million) OVER (PARTITION BY pre_pk ORDER BY measurement_date asc ROWS BETWEEN 7 PRECEDING and 6 PRECEDING),0) ;;}
+      derived_column: prior_7_days_confirmed_running_total_per_million {sql: coalesce (max (confirmed_running_total_per_million) OVER (PARTITION BY pre_pk ORDER BY measurement_date asc ROWS BETWEEN 8 PRECEDING and 7 PRECEDING),0) ;;}
 
-      derived_column: prior_1_days_deaths_running_total_per_million {sql: coalesce (max (${deaths_running_total_per_million}) OVER (PARTITION BY ${pre_pk} ORDER BY ${measurement_date} asc ROWS BETWEEN 2 PRECEDING and 1 PRECEDING),0) ;;}
-      derived_column: prior_2_days_deaths_running_total_per_million {sql: coalesce (max (${deaths_running_total_per_million}) OVER (PARTITION BY ${pre_pk} ORDER BY ${measurement_date} asc ROWS BETWEEN 3 PRECEDING and 2 PRECEDING),0) ;;}
-      derived_column: prior_3_days_deaths_running_total_per_million {sql: coalesce (max (${deaths_running_total_per_million}) OVER (PARTITION BY ${pre_pk} ORDER BY ${measurement_date} asc ROWS BETWEEN 4 PRECEDING and 3 PRECEDING),0) ;;}
-      derived_column: prior_4_days_deaths_running_total_per_million {sql: coalesce (max (${deaths_running_total_per_million}) OVER (PARTITION BY ${pre_pk} ORDER BY ${measurement_date} asc ROWS BETWEEN 5 PRECEDING and 4 PRECEDING),0) ;;}
-      derived_column: prior_5_days_deaths_running_total_per_million {sql: coalesce (max (${deaths_running_total_per_million}) OVER (PARTITION BY ${pre_pk} ORDER BY ${measurement_date} asc ROWS BETWEEN 6 PRECEDING and 5 PRECEDING),0) ;;}
-      derived_column: prior_6_days_deaths_running_total_per_million {sql: coalesce (max (${deaths_running_total_per_million}) OVER (PARTITION BY ${pre_pk} ORDER BY ${measurement_date} asc ROWS BETWEEN 7 PRECEDING and 6 PRECEDING),0) ;;}
-      derived_column: prior_7_days_deaths_running_total_per_million {sql: coalesce (max (${deaths_running_total_per_million}) OVER (PARTITION BY ${pre_pk} ORDER BY ${measurement_date} asc ROWS BETWEEN 8 PRECEDING and 7 PRECEDING),0) ;;}
+      derived_column: prior_1_days_deaths_running_total_per_million {sql: coalesce (max (deaths_running_total_per_million) OVER (PARTITION BY pre_pk ORDER BY measurement_date asc ROWS BETWEEN 2 PRECEDING and 1 PRECEDING),0) ;;}
+      derived_column: prior_2_days_deaths_running_total_per_million {sql: coalesce (max (deaths_running_total_per_million) OVER (PARTITION BY pre_pk ORDER BY measurement_date asc ROWS BETWEEN 3 PRECEDING and 2 PRECEDING),0) ;;}
+      derived_column: prior_3_days_deaths_running_total_per_million {sql: coalesce (max (deaths_running_total_per_million) OVER (PARTITION BY pre_pk ORDER BY measurement_date asc ROWS BETWEEN 4 PRECEDING and 3 PRECEDING),0) ;;}
+      derived_column: prior_4_days_deaths_running_total_per_million {sql: coalesce (max (deaths_running_total_per_million) OVER (PARTITION BY pre_pk ORDER BY measurement_date asc ROWS BETWEEN 5 PRECEDING and 4 PRECEDING),0) ;;}
+      derived_column: prior_5_days_deaths_running_total_per_million {sql: coalesce (max (deaths_running_total_per_million) OVER (PARTITION BY pre_pk ORDER BY measurement_date asc ROWS BETWEEN 6 PRECEDING and 5 PRECEDING),0) ;;}
+      derived_column: prior_6_days_deaths_running_total_per_million {sql: coalesce (max (deaths_running_total_per_million) OVER (PARTITION BY pre_pk ORDER BY measurement_date asc ROWS BETWEEN 7 PRECEDING and 6 PRECEDING),0) ;;}
+      derived_column: prior_7_days_deaths_running_total_per_million {sql: coalesce (max (deaths_running_total_per_million) OVER (PARTITION BY pre_pk ORDER BY measurement_date asc ROWS BETWEEN 8 PRECEDING and 7 PRECEDING),0) ;;}
 
-      derived_column: prior_1_days_confirmed_new_per_million {sql: coalesce (max (${confirmed_new_per_million}) OVER (PARTITION BY ${pre_pk} ORDER BY ${measurement_date} asc ROWS BETWEEN 2 PRECEDING and 1 PRECEDING),0) ;;}
-      derived_column: prior_2_days_confirmed_new_per_million {sql: coalesce (max (${confirmed_new_per_million}) OVER (PARTITION BY ${pre_pk} ORDER BY ${measurement_date} asc ROWS BETWEEN 3 PRECEDING and 2 PRECEDING),0) ;;}
-      derived_column: prior_3_days_confirmed_new_per_million {sql: coalesce (max (${confirmed_new_per_million}) OVER (PARTITION BY ${pre_pk} ORDER BY ${measurement_date} asc ROWS BETWEEN 4 PRECEDING and 3 PRECEDING),0) ;;}
-      derived_column: prior_4_days_confirmed_new_per_million {sql: coalesce (max (${confirmed_new_per_million}) OVER (PARTITION BY ${pre_pk} ORDER BY ${measurement_date} asc ROWS BETWEEN 5 PRECEDING and 4 PRECEDING),0) ;;}
-      derived_column: prior_5_days_confirmed_new_per_million {sql: coalesce (max (${confirmed_new_per_million}) OVER (PARTITION BY ${pre_pk} ORDER BY ${measurement_date} asc ROWS BETWEEN 6 PRECEDING and 5 PRECEDING),0) ;;}
-      derived_column: prior_6_days_confirmed_new_per_million {sql: coalesce (max (${confirmed_new_per_million}) OVER (PARTITION BY ${pre_pk} ORDER BY ${measurement_date} asc ROWS BETWEEN 7 PRECEDING and 6 PRECEDING),0) ;;}
-      derived_column: prior_7_days_confirmed_new_per_million {sql: coalesce (max (${confirmed_new_per_million}) OVER (PARTITION BY ${pre_pk} ORDER BY ${measurement_date} asc ROWS BETWEEN 8 PRECEDING and 7 PRECEDING),0) ;;}
+      derived_column: prior_1_days_confirmed_new_per_million {sql: coalesce (max (confirmed_new_per_million) OVER (PARTITION BY pre_pk ORDER BY measurement_date asc ROWS BETWEEN 2 PRECEDING and 1 PRECEDING),0) ;;}
+      derived_column: prior_2_days_confirmed_new_per_million {sql: coalesce (max (confirmed_new_per_million) OVER (PARTITION BY pre_pk ORDER BY measurement_date asc ROWS BETWEEN 3 PRECEDING and 2 PRECEDING),0) ;;}
+      derived_column: prior_3_days_confirmed_new_per_million {sql: coalesce (max (confirmed_new_per_million) OVER (PARTITION BY pre_pk ORDER BY measurement_date asc ROWS BETWEEN 4 PRECEDING and 3 PRECEDING),0) ;;}
+      derived_column: prior_4_days_confirmed_new_per_million {sql: coalesce (max (confirmed_new_per_million) OVER (PARTITION BY pre_pk ORDER BY measurement_date asc ROWS BETWEEN 5 PRECEDING and 4 PRECEDING),0) ;;}
+      derived_column: prior_5_days_confirmed_new_per_million {sql: coalesce (max (confirmed_new_per_million) OVER (PARTITION BY pre_pk ORDER BY measurement_date asc ROWS BETWEEN 6 PRECEDING and 5 PRECEDING),0) ;;}
+      derived_column: prior_6_days_confirmed_new_per_million {sql: coalesce (max (confirmed_new_per_million) OVER (PARTITION BY pre_pk ORDER BY measurement_date asc ROWS BETWEEN 7 PRECEDING and 6 PRECEDING),0) ;;}
+      derived_column: prior_7_days_confirmed_new_per_million {sql: coalesce (max (confirmed_new_per_million) OVER (PARTITION BY pre_pk ORDER BY measurement_date asc ROWS BETWEEN 8 PRECEDING and 7 PRECEDING),0) ;;}
 
-      derived_column: prior_1_days_deaths_new_per_million {sql: coalesce (max (${deaths_new_per_million}) OVER (PARTITION BY ${pre_pk} ORDER BY ${measurement_date} asc ROWS BETWEEN 2 PRECEDING and 1 PRECEDING),0) ;;}
-      derived_column: prior_2_days_deaths_new_per_million {sql: coalesce (max (${deaths_new_per_million}) OVER (PARTITION BY ${pre_pk} ORDER BY ${measurement_date} asc ROWS BETWEEN 3 PRECEDING and 2 PRECEDING),0) ;;}
-      derived_column: prior_3_days_deaths_new_per_million {sql: coalesce (max (${deaths_new_per_million}) OVER (PARTITION BY ${pre_pk} ORDER BY ${measurement_date} asc ROWS BETWEEN 4 PRECEDING and 3 PRECEDING),0) ;;}
-      derived_column: prior_4_days_deaths_new_per_million {sql: coalesce (max (${deaths_new_per_million}) OVER (PARTITION BY ${pre_pk} ORDER BY ${measurement_date} asc ROWS BETWEEN 5 PRECEDING and 4 PRECEDING),0) ;;}
-      derived_column: prior_5_days_deaths_new_per_million {sql: coalesce (max (${deaths_new_per_million}) OVER (PARTITION BY ${pre_pk} ORDER BY ${measurement_date} asc ROWS BETWEEN 6 PRECEDING and 5 PRECEDING),0) ;;}
-      derived_column: prior_6_days_deaths_new_per_million {sql: coalesce (max (${deaths_new_per_million}) OVER (PARTITION BY ${pre_pk} ORDER BY ${measurement_date} asc ROWS BETWEEN 7 PRECEDING and 6 PRECEDING),0) ;;}
-      derived_column: prior_7_days_deaths_new_per_million {sql: coalesce (max (${deaths_new_per_million}) OVER (PARTITION BY ${pre_pk} ORDER BY ${measurement_date} asc ROWS BETWEEN 8 PRECEDING and 7 PRECEDING),0) ;;}
+      derived_column: prior_1_days_deaths_new_per_million {sql: coalesce (max (deaths_new_per_million) OVER (PARTITION BY pre_pk ORDER BY measurement_date asc ROWS BETWEEN 2 PRECEDING and 1 PRECEDING),0) ;;}
+      derived_column: prior_2_days_deaths_new_per_million {sql: coalesce (max (deaths_new_per_million) OVER (PARTITION BY pre_pk ORDER BY measurement_date asc ROWS BETWEEN 3 PRECEDING and 2 PRECEDING),0) ;;}
+      derived_column: prior_3_days_deaths_new_per_million {sql: coalesce (max (deaths_new_per_million) OVER (PARTITION BY pre_pk ORDER BY measurement_date asc ROWS BETWEEN 4 PRECEDING and 3 PRECEDING),0) ;;}
+      derived_column: prior_4_days_deaths_new_per_million {sql: coalesce (max (deaths_new_per_million) OVER (PARTITION BY pre_pk ORDER BY measurement_date asc ROWS BETWEEN 5 PRECEDING and 4 PRECEDING),0) ;;}
+      derived_column: prior_5_days_deaths_new_per_million {sql: coalesce (max (deaths_new_per_million) OVER (PARTITION BY pre_pk ORDER BY measurement_date asc ROWS BETWEEN 6 PRECEDING and 5 PRECEDING),0) ;;}
+      derived_column: prior_6_days_deaths_new_per_million {sql: coalesce (max (deaths_new_per_million) OVER (PARTITION BY pre_pk ORDER BY measurement_date asc ROWS BETWEEN 7 PRECEDING and 6 PRECEDING),0) ;;}
+      derived_column: prior_7_days_deaths_new_per_million {sql: coalesce (max (deaths_new_per_million) OVER (PARTITION BY pre_pk ORDER BY measurement_date asc ROWS BETWEEN 8 PRECEDING and 7 PRECEDING),0) ;;}
 
     }
   }
@@ -783,7 +724,7 @@ view: prior_days_cases_covid_core {
 ### Compare Geographies
 ####################
 
-view: kpis_by_county_by_date_core {
+view: kpis_by_county_by_date {
   derived_table: {
     datagroup_trigger: covid_data
     explore_source: covid_combined {
@@ -810,7 +751,7 @@ view: kpis_by_county_by_date_core {
   }
 }
 
-view: kpis_by_state_by_date_core {
+view: kpis_by_state_by_date {
   derived_table: {
     datagroup_trigger: covid_data
     explore_source: covid_combined {
@@ -837,7 +778,7 @@ view: kpis_by_state_by_date_core {
   }
 }
 
-view: kpis_by_country_by_date_core {
+view: kpis_by_country_by_date {
   derived_table: {
     datagroup_trigger: covid_data
     explore_source: covid_combined {
@@ -864,7 +805,7 @@ view: kpis_by_country_by_date_core {
   }
 }
 
-view: kpis_by_entity_by_date_core {
+view: kpis_by_entity_by_date {
   derived_table: {
     datagroup_trigger: covid_data
     sql:

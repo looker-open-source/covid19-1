@@ -1,15 +1,7 @@
-include: "//@{CONFIG_PROJECT_NAME}/covid_block/policies_by_state.view.lkml"
 #This view pulls in COVID policies and mitigation efforts by date
 
 
 view: policies_by_state {
-  extends: [policies_by_state_config]
-}
-
-###################################################
-
-view: policies_by_state_core {
-  extension: required
   derived_table: {
     sql_trigger_value: SELECT MAX(MAX(a.Last_Update_Date),MAX(b.Last_Update_Date)) FROM
                           `lookerdata.covid19_block.state_mitigations` a

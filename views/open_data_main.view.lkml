@@ -1,16 +1,7 @@
-include: "//@{CONFIG_PROJECT_NAME}/covid_block/open_data_main.view.lkml"
-
 # open_data_main (New!) Pulls in data from the [COVID-19 Open Data project](https://github.com/GoogleCloudPlatform/covid-19-open-data)
 # and reports on testing, hospitalizations, and vaccination progress in the US.
 
 view: open_data_main {
-  extends: [open_data_main_config]
-}
-
-###################################################
-
-
-view: open_data_main_core {
   derived_table: {
     datagroup_trigger: covid_data
     cluster_keys: ["state_name"]

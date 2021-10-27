@@ -1,15 +1,6 @@
-include: "//@{CONFIG_PROJECT_NAME}/covid_block/italy_regions.view.lkml"
 #This view pulls in data about cases, hospitalizations, and tests for italian regions
 
 view: italy_regions {
-  extends: [italy_regions_config]
-}
-
-###################################################
-
-
-view: italy_regions_core {
-  extension: required
   # SRC: https://github.com/pcm-dpc/COVID-19/blob/master/dati-regioni/dpc-covid19-ita-regioni.csv
   derived_table: {
     sql:

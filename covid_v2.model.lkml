@@ -1,29 +1,10 @@
 connection: "@{CONNECTION_NAME}"
 
-include: "/covid_block/*.view.lkml"
 include: "/explores/*.explore.lkml"
 include: "/dashboards/*.dashboard.lookml"
 
-include: "//@{CONFIG_PROJECT_NAME}/*.model.lkml"
-include: "//@{CONFIG_PROJECT_NAME}/*.dashboard"
-include: "//@{CONFIG_PROJECT_NAME}/covid_block/*.view.lkml"
-
 #map layers
-include: "map_layers.lkml"
-
-############ Explores ############
-
-explore: covid_combined {
-  extends: [covid_combined_config]
-}
-
-explore: kpis_by_entity_by_date {
-  extends: [kpis_by_entity_by_date_config]
-}
-
-explore: italy {
-  extends: [italy_config]
-}
+include: "/assets/map_layers.lkml"
 
 ############ Caching Logic ############
 
