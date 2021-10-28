@@ -21,7 +21,7 @@ explore: italy {
 
   join: italy_region_stats {
     relationship: many_to_one
-    sql_on: (${italy.region_code} = ${italy_region_stats.codice_regione} OR ${italy_region_stats.codice_regione} = 4)
+    sql_on: (${italy.region_code} = ${italy_region_stats.codice_regione} OR ${italy_region_stats.codice_regione} = '4')
       AND ${italy.region_name} = ${italy_region_stats.denominazione_regione} ;;
   }
 

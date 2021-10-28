@@ -2,7 +2,7 @@
 
 view: italy_region_stats {
   derived_table: {
-    sql: SELECT * FROM `lookerdata.covid19_block.italy_region_stats` ;;
+    sql: SELECT *, cast(codice_regione as string) codice_regione_str FROM `lookerdata.covid19_block.italy_region_stats` ;;
     sql_trigger_value: SELECT COUNT(*) FROM `lookerdata.covid19_block.italy_region_stats` ;;
   }
 
@@ -23,10 +23,17 @@ view: italy_region_stats {
     hidden: yes
   }
 
+  # dimension: codice_regione {
+  #   #region_code
+  #   type: string
+  #   sql: ${TABLE}.codice_regione ;;
+  #   hidden: yes
+  # }
+
   dimension: codice_regione {
     #region_code
-    type: number
-    sql: ${TABLE}.codice_regione ;;
+    type: string
+    sql: ${TABLE}.codice_regione_str ;;
     hidden: yes
   }
 
