@@ -7,9 +7,9 @@ view: italy_province {
     WITH region_rollup AS (
       SELECT
         date(date) as date
-        , cast(region_code as int64) AS region_code
+        , region_code AS region_code
         -- Because of Trento/Bolzano, we need the denominazione as well as the codice
-        , region_name
+        , name
         , SUM(confirmed_cases) as province_cases
       FROM `bigquery-public-data.covid19_italy.data_by_province`
       GROUP BY 1, 2, 3),
@@ -25,9 +25,9 @@ view: italy_province {
       `bigquery-public-data.covid19_italy.data_by_region` ir
       -- Join the regional data to the province-level rollup on date, region code and region name
       LEFT JOIN region_rollup rr ON
-        rr.date = date(ir.date)
+        date(rr.date) = date(ir.date)
         AND rr.region_code = ir.region_code
-        AND ir.region_name = rr.region_name
+        AND ir.region_name = rr.name
     WHERE
       -- Next find the rows in which the sum of province data doesn't match the regional data
       ir.total_confirmed_cases - rr.province_cases <> 0
@@ -35,8 +35,8 @@ view: italy_province {
     -- Now union the few rows that we had to create with the actual province-level data
     SELECT
       date(date) as date
-      , region_name
-      , cast(region_code as int64) AS region_code
+      , name
+      , region_code AS region_code
       , province_name
       , province_abbreviation
       , confirmed_cases

@@ -7,7 +7,7 @@ view: italy_regions {
     SELECT
       date(ir.date) as date
       , ir.region_name
-      , ir.region_code
+      , ir.region_code region_code
       , ir.hospitalized_patients_symptoms
       , hospitalized_patients_symptoms - coalesce(LAG(hospitalized_patients_symptoms, 1) OVER (PARTITION BY ir.region_name, ir.region_code ORDER BY ir.date ASC),0) as change_in_hospitalized_patients_symptoms
       , ir.hospitalized_patients_intensive_care
